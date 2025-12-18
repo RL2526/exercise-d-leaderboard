@@ -9,7 +9,7 @@ from datetime import datetime
 # CONFIGURATION
 # --------------------------------------------------
 ORG = "rl2526"                     # GitHub organization name
-ASSIGNMENT_PREFIX = "exercise-d-" # student repo prefix
+ASSIGNMENT_PREFIX = "rl-exercise-d-" # student repo prefix
 WORKFLOW_NAME = "Update Leaderboard"        # name of the student workflow
 OUTPUT_FILE = "leaderboard.json"
 
