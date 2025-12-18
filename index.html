@@ -46,9 +46,7 @@
     <tr>
       <th>Rank</th>
       <th>Student</th>
-      <th>Repo</th>
       <th>Avg return</th>
-      <th>Last update</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -85,9 +83,7 @@ function renderLeaderboard(data) {
     tr.innerHTML = `
       <td>${idx + 1}</td>
       <td>${e.student_name}</td>
-      <td>${e.repo}</td>
       <td>${Number(e.avg_return).toFixed(3)}</td>
-      <td>${e.updated_at}</td>
     `;
 
     tbody.appendChild(tr);
