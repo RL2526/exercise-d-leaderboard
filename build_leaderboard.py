@@ -44,7 +44,7 @@ def list_repos():
         for repo in batch:
             repo_name = repo["name"]
             print(f"student repo name: {repo_name}")
-            if repo_name["name"].startswith(ASSIGNMENT_PREFIX):
+            if repo_name.startswith(ASSIGNMENT_PREFIX):
                 # Keep student info as part of repo["name"]
                 repos.append(repo)
 
