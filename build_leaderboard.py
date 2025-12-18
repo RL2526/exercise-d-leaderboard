@@ -56,6 +56,7 @@ def latest_successful_run(repo):
     name = repo["name"]
     """Get latest successful workflow run."""
     url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs"
+    print(url)
     r = requests.get(url, headers=HEADERS_READ)
     r.raise_for_status()
 
