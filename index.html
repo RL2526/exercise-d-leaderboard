@@ -1,10 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Exercise D – Leaderboard</title>
+<meta charset="UTF-8" />
+<title>Exercise D – Leaderboard</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+  }
+  h1 {
+    margin-bottom: 5px;
+  }
+  #updated {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th {
+    background: #f0f0f0;
+    cursor: pointer;
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  td {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+  }
+  tr:nth-child(even) {
+    background: #fafafa;
+  }
+</style>
 </head>
+
 <body>
-  <h1>Exercise D – Leaderboard</h1>
+
+<h1>Exercise D – Leaderboard</h1>
+<div id="updated">Loading...</div>
+
+<table id="leaderboard">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Student</th>
+      <th>Repo</th>
+      <th>Avg return</th>
+      <th>Last update</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+// -------------------------------------------------------------
+// FETCH LEADERBOARD.JSON
+// -------------------------------------------------------------
+fetch('leaderboard.json')
+  .then(r => r.json())
+  .then(data => renderLeaderboard(data))
+  .catch(err => {
+    document.getElementById('updated').innerText =
+      "Failed to load leaderboard.json";
+    console.error(err);
+  });
+
+// -------------------------------------------------------------
+// RENDER LEADERBOARD
+// -------------------------------------------------------------
+function renderLeaderboard(data) {
+  const entries = data.entries || [];
+
+  document.getElementById('updated').innerText =
+    "Last updated: " + data.generated_at;
+
+  const tbody = document.querySelector("#leaderboard tbody");
+  tbody.innerHTML = "";
+
+  entries.forEach((e, idx) => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${idx + 1}</td>
+      <td>${e.student_name}</td>
+      <td>${e.repo}</td>
+      <td>${Number(e.avg_return).toFixed(3)}</td>
+      <td>${e.updated_at}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  makeSortable();
+}
+
+// -------------------------------------------------------------
+// SIMPLE TABLE SORTING
+// -------------------------------------------------------------
+function makeSortable() {
+  const table = document.getElementById("leaderboard");
+  const headers = table.querySelectorAll("th");
+
+  headers.forEach((th, index) => {
+    th.addEventListener("click", () => {
+      const rows = Array.from(table.querySelectorAll("tbody tr"));
+      const asc = th.dataset.asc === "true";
+
+      rows.sort((a, b) => {
+        const x = a.children[index].innerText;
+        const y = b.children[index].innerText;
+
+        const nx = parseFloat(x);
+        const ny = parseFloat(y);
+
+        if (!isNaN(nx) && !isNaN(ny)) {
+          return asc ? nx - ny : ny - nx;
+        }
+        return asc ? x.localeCompare(y) : y.localeCompare(x);
+      });
+
+      rows.forEach(r => table.querySelector("tbody").appendChild(r));
+      th.dataset.asc = (!asc).toString();
+    });
+  });
+}
+</script>
+
 </body>
 </html>
