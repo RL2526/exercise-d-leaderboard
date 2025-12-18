@@ -56,7 +56,7 @@ def list_repos():
 def latest_successful_run(repo):
     name = repo["name"]
     """Get latest successful workflow run."""
-    url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs"
+    url = f"https://api.github.com/{ORG}/{name}/actions/runs"
     print(f"Student Repo URL: {url}")
     r = requests.get(url, headers=HEADERS_READ)
     r.raise_for_status()
@@ -71,7 +71,7 @@ def latest_successful_run(repo):
 def download_result(repo, run_id):
     name = repo["name"]
     """Download and extract result.json from artifact."""
-    url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs/{run_id}/artifacts"
+    url = f"https://api.github.com/{ORG}/{name}/actions/runs/{run_id}/artifacts"
     r = requests.get(url, headers=HEADERS_READ)
     r.raise_for_status()
 
