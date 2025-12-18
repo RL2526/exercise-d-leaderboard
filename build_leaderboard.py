@@ -43,7 +43,8 @@ def list_repos():
 
         for repo in batch:
             repo_name = repo["name"]
-            if repo["name"].startswith(ASSIGNMENT_PREFIX):
+            print(f"student repo name: {repo_name}")
+            if repo_name["name"].startswith(ASSIGNMENT_PREFIX):
                 # Keep student info as part of repo["name"]
                 repos.append(repo)
 
@@ -56,7 +57,7 @@ def latest_successful_run(repo):
     name = repo["name"]
     """Get latest successful workflow run."""
     url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs"
-    print(f"Student Repo URLS: {url}")
+    print(f"Student Repo URL: {url}")
     r = requests.get(url, headers=HEADERS_READ)
     r.raise_for_status()
 
