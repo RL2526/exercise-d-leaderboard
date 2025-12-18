@@ -1,4 +1,17 @@
 {
-  "generated_at": "2025-12-18T16:15:58.112356Z",
-  "entries": []
+  "generated_at": "2025-12-18T16:17:41.566064Z",
+  "entries": [
+    {
+      "repo": "rl-exercise-d-YaMusk",
+      "student_name": "YaMusk",
+      "avg_return": 0.716,
+      "updated_at": "2025-12-17T16:10:00Z"
+    },
+    {
+      "repo": "rl-exercise-d-LDarg",
+      "student_name": "LDarg",
+      "avg_return": 0.7144999999999999,
+      "updated_at": "2025-12-18T11:57:25Z"
+    }
+  ]
 }
