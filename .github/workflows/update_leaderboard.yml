@@ -11,9 +11,32 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
 
     steps:
+      - name: Checkout evaluator
+        uses: actions/checkout@v4
+        with:
+          repository: rl2526/exercise-d-evaluator
+          path: evaluator
+
+      - name: Download agents
+        env:
+          READ: ${{ secrets.READ }}
+        run: |
+          mkdir -p /agents
+          python -u download_agents.py
+
+      - name: Build evaluator image
+        run: docker build -t exd-eval ./evaluator
+
+      - name: Run evaluator
+        run: |
+          mkdir -p /out 
+          docker run --rm \
+            -v "/out:/out" \
+            -v "/agents:/agents:ro" \
+            exd-eval
+
       - name: Checkout leaderboard repo
         uses: actions/checkout@v4
         with:
@@ -31,7 +54,7 @@ jobs:
 
       - name: Build leaderboard
         env:
-          READ: ${{ secrets.READ }} # read-only token for student repos
+          READ: ${{ secrets.READ }}
         run: |
           python -u build_leaderboard.py
 

@@ -1,146 +1,54 @@
 import json
-import os
-import requests
-import zipfile
-from io import BytesIO
 from datetime import datetime
-from verify import verify_signed_json
-import logging
+from pathlib import Path
 import sqlite3
 
-logger = logging.getLogger(__name__)
-
-db_path= "data.db"
-
-# --------------------------------------------------
-# CONFIGURATION
-# --------------------------------------------------
-ORG = "rl2526"                     # GitHub organization name
-ASSIGNMENT_PREFIX = "rl-exercise-d-" # student repo prefix
-WORKFLOW_NAME = "Evaluate"        # name of the student workflow
+DB_PATH = "data.db"
 OUTPUT_FILE = "leaderboard.json"
 
+def upsert_user_score(name, score, ts):
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute("""
+            INSERT INTO users (name, current_score, max_score, last_updated)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(name) DO UPDATE SET
+                current_score = excluded.current_score,
+                max_score = MAX(users.max_score, excluded.current_score),
+                last_updated = excluded.last_updated;
+        """, (name, score, score, ts))
+        conn.commit()
 
-TOKEN_READ = os.environ.get("READ")
+def get_score_list():
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT name, current_score, last_updated, max_score
+            FROM users
+            ORDER BY current_score DESC
+        """)
+        rows = cur.fetchall()
 
-if TOKEN_READ is None:
-    raise RuntimeError("READ environment variable not set")
-
-HEADERS_READ = {
-    "Authorization": f"Bearer {TOKEN_READ}",
-    "Accept": "application/vnd.github+json",
-}
-
-# --------------------------------------------------
-# GITHUB API HELPERS
-# --------------------------------------------------
-
-
-def get_all_user_names():
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-
-    cur.execute("SELECT name FROM users")
-    rows = cur.fetchall()
-
-    conn.close()
-
-    return {row[0] for row in rows}
-
-
-def list_repos():
-    """List all repos in the org that match the assignment prefix."""
-    repos = []
-    page = 1
-
-    user_names = get_all_user_names()
-
-    while True:
-        url = f"https://api.github.com/orgs/{ORG}/repos?per_page=100&page={page}"
-        r = requests.get(url, headers=HEADERS_READ)
-        r.raise_for_status()
-        batch = r.json()
-
-        if not batch:
-            break
-
-        for repo in batch:
-            repo_name = repo["name"]
-            print(f"student repo name: {repo_name}")
-            if repo_name.startswith(ASSIGNMENT_PREFIX):
-                repo_name = repo_name.replace(ASSIGNMENT_PREFIX, "")
-                if repo_name in user_names:
-                    repos.append(repo)
-        page += 1
-    
-
-    return repos
+    # hübsch aufbereiten
+    return [
+        {
+            "student": name,
+            "avg_return": score,
+            "timestamp": datetime.fromtimestamp(ts),
+            "max_score": max_score
+        }
+        for name, score, ts, max_score in rows
+    ]
 
 
-def latest_successful_run(repo):
-    name = repo["name"]
-    """Get latest successful workflow run."""
-    url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs"
-    print(f"Student Repo URL: {url}")
-    r = requests.get(url, headers=HEADERS_READ)
-    r.raise_for_status()
+if __name__ == "__main__":
+    folder_path = "/out"
+    folder = Path(folder_path)
 
-    for run in r.json().get("workflow_runs", []):
-        if run["name"] == WORKFLOW_NAME and run["conclusion"] == "success":
-            return run
-
-    return None
-
-
-def download_result(repo, run_id):
-    name = repo["name"]
-    """Download and extract result.json from artifact."""
-    url = f"https://api.github.com/repos/{ORG}/{name}/actions/runs/{run_id}/artifacts"
-    r = requests.get(url, headers=HEADERS_READ)
-    r.raise_for_status()
-
-    artifacts = r.json().get("artifacts", [])
-    artifact = next((a for a in artifacts if a["name"] == "result"), None)
-
-    if artifact is None:
-        return None
-
-    r = requests.get(artifact["archive_download_url"], headers=HEADERS_READ)
-    r.raise_for_status()
-
-    with zipfile.ZipFile(BytesIO(r.content)) as z:
-        for name in z.namelist():
-            if name.endswith("result.json"):
-                return json.loads(z.read(name))
-
-    return None
-
-
-# --------------------------------------------------
-# MAIN
-# --------------------------------------------------
-def main():
     entries = []
 
-    for repo in list_repos(): #TODO: db query
-        repo_name = repo["name"]
-        print(f"Processing {repo}")
-
-        run = latest_successful_run(repo)
-        if not run:
-            print("  No successful run found")
-            continue
-
-        result = download_result(repo, run["id"])
-        if not result:
-            print("  No result.json artifact")
-            continue
-        
-        data = result["result"]
-        if not verify_signed_json(result):
-            logger.error(f"Repo {repo_name} signature incorrect.")
-            continue
-        result = json.loads(data)
+    for file in folder.glob("*.py"):
+        repo_name = file.stem
+        result = json.loads(file)
 
         # Compute average over all average_return values
         if result:
@@ -151,14 +59,17 @@ def main():
         student_name = repo_name.rsplit("-", 1)[-1]
 
         entries.append({
-            "repo": repo_name,
             "student_name": student_name,
             "avg_return": avg_return,
-            "updated_at": run["updated_at"],
         })
+    
+    for e in entries: 
+        upsert_user_score(e["student_name"], e["avg_return"], datetime.now())
+
+    entries = get_score_list
 
     # sort by score descending
-    entries.sort(key=lambda e: (-e["avg_return"], e["repo"]))
+    entries.sort(key=lambda e: (-e["avg_return"], e["student_name"]))
 
     with open(OUTPUT_FILE, "w") as f:
         json.dump(
@@ -171,7 +82,3 @@ def main():
         )
 
     print(f"Wrote {OUTPUT_FILE}")
-
-
-if __name__ == "__main__":
-    main()
