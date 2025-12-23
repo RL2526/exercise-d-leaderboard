@@ -31,8 +31,8 @@ jobs:
         env:
           READ: ${{ secrets.READ }} # read-only token for student repos
         run: |
-          python -u build_leaderboard.py
           pip install -r requirements.txt
+          python -u build_leaderboard.py
 
       - name: Commit and push if changed
         run: |
