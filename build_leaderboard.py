@@ -4,6 +4,13 @@ import requests
 import zipfile
 from io import BytesIO
 from datetime import datetime
+from verify import verify_signed_json
+import logging
+import sqlite3
+
+logger = logging.getLogger(__name__)
+
+db_path= "data.db"
 
 # --------------------------------------------------
 # CONFIGURATION
@@ -27,10 +34,26 @@ HEADERS_READ = {
 # --------------------------------------------------
 # GITHUB API HELPERS
 # --------------------------------------------------
+
+
+def get_all_user_names():
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    cur.execute("SELECT name FROM users")
+    rows = cur.fetchall()
+
+    conn.close()
+
+    return {row[0] for row in rows}
+
+
 def list_repos():
     """List all repos in the org that match the assignment prefix."""
     repos = []
     page = 1
+
+    user_names = get_all_user_names()
 
     while True:
         url = f"https://api.github.com/orgs/{ORG}/repos?per_page=100&page={page}"
@@ -45,10 +68,11 @@ def list_repos():
             repo_name = repo["name"]
             print(f"student repo name: {repo_name}")
             if repo_name.startswith(ASSIGNMENT_PREFIX):
-                # Keep student info as part of repo["name"]
-                repos.append(repo)
-
+                repo_name = repo_name.replace(ASSIGNMENT_PREFIX, "")
+                if repo_name in user_names:
+                    repos.append(repo)
         page += 1
+    
 
     return repos
 
@@ -98,7 +122,7 @@ def download_result(repo, run_id):
 def main():
     entries = []
 
-    for repo in list_repos():
+    for repo in list_repos(): #TODO: db query
         repo_name = repo["name"]
         print(f"Processing {repo}")
 
@@ -111,6 +135,12 @@ def main():
         if not result:
             print("  No result.json artifact")
             continue
+        
+        data = result["result"]
+        if not verify_signed_json(result):
+            logger.error(f"Repo {repo_name} signature incorrect.")
+            continue
+        result = json.loads(data)
 
         # Compute average over all average_return values
         if result:
