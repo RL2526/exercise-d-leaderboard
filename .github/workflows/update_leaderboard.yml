@@ -13,18 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout evaluator
-        uses: actions/checkout@v4
-        with:
-          repository: rl2526/exercise-d-evaluator
-          path: evaluator
-
       - name: Download agents
         env:
           READ: ${{ secrets.READ }}
         run: |
           mkdir -p agents
+          echo $PWD
           python -u download_agents.py
+
+      - name: Checkout evaluator
+        uses: actions/checkout@v4
+        with:
+          repository: rl2526/exercise-d-evaluator
+          path: evaluator
 
       - name: Build evaluator image
         run: docker build -t exd-eval ./evaluator
