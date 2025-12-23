@@ -1,23 +1,4 @@
 {
-  "generated_at": "2025-12-23T14:53:18.041868Z",
-  "entries": [
-    {
-      "repo": "rl-exercise-d-YaMusk",
-      "student_name": "YaMusk",
-      "avg_return": 0.716,
-      "updated_at": "2025-12-17T16:10:00Z"
-    },
-    {
-      "repo": "rl-exercise-d-LDarg",
-      "student_name": "LDarg",
-      "avg_return": 0.7144999999999999,
-      "updated_at": "2025-12-18T11:57:25Z"
-    },
-    {
-      "repo": "rl-exercise-d-mzeimet",
-      "student_name": "mzeimet",
-      "avg_return": 0.6755,
-      "updated_at": "2025-12-21T10:51:16Z"
-    }
-  ]
+  "generated_at": "2025-12-23T15:51:49.273273Z",
+  "entries": []
 }
