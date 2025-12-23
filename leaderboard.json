@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-18T16:35:25.109205Z",
+  "generated_at": "2025-12-23T14:53:18.041868Z",
   "entries": [
     {
       "repo": "rl-exercise-d-YaMusk",
@@ -12,6 +12,12 @@
       "student_name": "LDarg",
       "avg_return": 0.7144999999999999,
       "updated_at": "2025-12-18T11:57:25Z"
+    },
+    {
+      "repo": "rl-exercise-d-mzeimet",
+      "student_name": "mzeimet",
+      "avg_return": 0.6755,
+      "updated_at": "2025-12-21T10:51:16Z"
     }
   ]
 }
