@@ -35,15 +35,16 @@ jobs:
 
       - name: Run evaluator
         run: |
-          mkdir -p out 
+          mkdir -p ${GITHUB_WORKSPACE}/out 
           docker run --rm \
-            -v "$PWD/out:/out" \
+            -v "${GITHUB_WORKSPACE}/out:/out" \
             -v "$PWD/agents:/agents:ro" \
             exd-eval
       - name: Checkout leaderboard repo
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.LEADERBOARD }}
+          path: leaderboard
 
       - name: Set up Python
         uses: actions/setup-python@v5
