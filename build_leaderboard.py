@@ -41,7 +41,7 @@ def get_score_list():
 
 
 if __name__ == "__main__":
-    folder_path = "/out"
+    folder_path = "out"
     folder = Path(folder_path)
 
     entries = []
