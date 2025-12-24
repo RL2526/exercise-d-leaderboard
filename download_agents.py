@@ -142,7 +142,7 @@ def main():
             print(" No agent.py")
             continue
 
-        with open(f"/agents/{repo_name}.py", "w") as f:
+        with open(f"agents/{repo_name}.py", "w") as f:
             f.write(result)
 
 if __name__ == "__main__":
