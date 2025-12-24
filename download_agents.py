@@ -71,8 +71,7 @@ def list_repos():
     return repos
 
 
-def latest_commit(repo):
-    name = repo["name"]
+def latest_commit(name):
 
     # holt Commits vom Default-Branch (meist main)
     url = f"https://api.github.com/repos/{ORG}/{name}/commits"
