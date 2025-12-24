@@ -65,11 +65,12 @@ if __name__ == "__main__":
     
     for e in entries: 
         upsert_user_score(e["student_name"], e["avg_return"], datetime.now())
+        print(f"upserted student: {e["student_name"]}")
 
     entries = get_score_list()
 
     # sort by score descending
-    entries.sort(key=lambda e: (-e["avg_return"], e["student_name"]))
+    entries.sort(key=lambda e: (-e["avg_return"], e["student"]))
 
     with open(OUTPUT_FILE, "w") as f:
         json.dump(
