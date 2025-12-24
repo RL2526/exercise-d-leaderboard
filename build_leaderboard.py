@@ -42,7 +42,7 @@ def get_score_list():
 
 
 if __name__ == "__main__":
-    folder_path = os.path.join(os.environ["GITHUB_WORKSPACE"], "out")
+    folder_path = Path(os.environ["GITHUB_WORKSPACE"]) / "out"
     folder = Path(folder_path)
 
     entries = []
