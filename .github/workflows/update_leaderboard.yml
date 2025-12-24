@@ -69,7 +69,7 @@ jobs:
           if git diff --quiet; then
             echo "No leaderboard changes"
           else
-            git add leaderboard.json
+            git add leaderboard.json data.db
             git commit -m "Update leaderboard"
             git push
           fi
