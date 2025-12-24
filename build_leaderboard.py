@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 import sqlite3
@@ -41,7 +42,7 @@ def get_score_list():
 
 
 if __name__ == "__main__":
-    folder_path = "./out"
+    folder_path = os.path.join(os.environ["GITHUB_WORKSPACE"], "out")
     folder = Path(folder_path)
 
     entries = []
