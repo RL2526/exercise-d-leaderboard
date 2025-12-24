@@ -46,7 +46,9 @@
     <tr>
       <th>Rank</th>
       <th>Student</th>
-      <th>Avg return</th>
+      <th>Current Avg return</th>
+      <th>Max Avg return</th>
+      <th>Last updated</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -82,8 +84,10 @@ function renderLeaderboard(data) {
 
     tr.innerHTML = `
       <td>${idx + 1}</td>
-      <td>${e.student_name}</td>
+      <td>${e.student}</td>
       <td>${Number(e.avg_return).toFixed(3)}</td>
+      <td>${Number(e.max_score).toFixed(3)}</td>
+      <td>${e.timestamp}</td>
     `;
 
     tbody.appendChild(tr);
