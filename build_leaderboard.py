@@ -66,7 +66,7 @@ if __name__ == "__main__":
     for e in entries: 
         upsert_user_score(e["student_name"], e["avg_return"], datetime.now())
 
-    entries = get_score_list
+    entries = get_score_list()
 
     # sort by score descending
     entries.sort(key=lambda e: (-e["avg_return"], e["student_name"]))
