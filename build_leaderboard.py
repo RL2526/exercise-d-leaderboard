@@ -41,12 +41,12 @@ def get_score_list():
 
 
 if __name__ == "__main__":
-    folder_path = "out"
+    folder_path = "./out"
     folder = Path(folder_path)
 
     entries = []
 
-    for file in folder.glob("*.py"):
+    for file in folder.glob("*.json"):
         repo_name = file.stem
         with open(file, "r", encoding="utf-8") as f:
             result = json.load(f)
