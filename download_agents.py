@@ -85,7 +85,7 @@ def latest_commit(name):
         return None
 
     iso = commits[0]["commit"]["committer"]["date"]   
-    dt = datetime.datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
     return int(dt.timestamp())
 
 def get_last_db_timestamp(username):
