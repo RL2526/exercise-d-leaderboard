@@ -64,8 +64,9 @@ if __name__ == "__main__":
         })
     
     for e in entries: 
+        student_name = e["student_name"]
         upsert_user_score(e["student_name"], e["avg_return"], datetime.now())
-        print(f"upserted student: {e["student_name"]}")
+        print(f"upserted student: {student_name}")
 
     entries = get_score_list()
 
