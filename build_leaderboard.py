@@ -33,7 +33,7 @@ def get_score_list():
         {
             "student": name,
             "avg_return": score,
-            "timestamp": datetime.fromtimestamp(ts),
+            "timestamp": datetime.fromtimestamp(ts).isoformat(),
             "max_score": max_score
         }
         for name, score, ts, max_score in rows
@@ -48,7 +48,8 @@ if __name__ == "__main__":
 
     for file in folder.glob("*.py"):
         repo_name = file.stem
-        result = json.loads(file)
+        with open(file, "r", encoding="utf-8") as f:
+            result = json.load(f)
 
         # Compute average over all average_return values
         if result:
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     
     for e in entries: 
         student_name = e["student_name"]
-        upsert_user_score(e["student_name"], e["avg_return"], datetime.now())
+        upsert_user_score(e["student_name"], e["avg_return"], int(datetime.now().timestamp()))
         print(f"upserted student: {student_name}")
 
     entries = get_score_list()
