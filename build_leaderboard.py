@@ -42,10 +42,6 @@ def get_score_list():
 
 
 if __name__ == "__main__":
-    print("WORKSPACE =", os.environ["GITHUB_WORKSPACE"])
-    print("CWD       =", Path.cwd())
-    print("OUT DIR   =", list((Path(os.environ["GITHUB_WORKSPACE"]) / "out").glob("*")))
-
     folder_path = Path(os.environ["GITHUB_WORKSPACE"]) / "out"
     folder = Path(folder_path)
 
@@ -55,7 +51,7 @@ if __name__ == "__main__":
         repo_name = file.stem
         with open(file, "r", encoding="utf-8") as f:
             result = json.load(f)
-
+        print(result)
         # Compute average over all average_return values
         if result:
             avg_return = sum(p["average_return"] for p in result) / len(result)
