@@ -111,7 +111,7 @@ def is_newer_than_db(repo):
 def download_agent(repo):
     name = repo["name"]
 
-    url = f"https://api.github.com/repos/{ORG}/{name}/contents/agent.py"
+    url = f"https://api.github.com/repos/{ORG}/{name}/contents/submission/agent.py"
 
     r = requests.get(url, headers=HEADERS_READ)
     r.raise_for_status()
