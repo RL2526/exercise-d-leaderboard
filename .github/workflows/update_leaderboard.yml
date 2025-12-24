@@ -40,7 +40,8 @@ jobs:
             -v "$PWD/out:/out" \
             -v "$PWD/agents:/agents:ro" \
             exd-eval
-
+      - name: Debug - list results
+        run: ls -l out
       - name: Checkout leaderboard repo
         uses: actions/checkout@v4
         with:
