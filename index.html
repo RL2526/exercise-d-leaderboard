@@ -82,12 +82,17 @@ function renderLeaderboard(data) {
   entries.forEach((e, idx) => {
     const tr = document.createElement("tr");
 
+    const hasSubmission = Number(e.timestamp) !== 0;
+    const avg = hasSubmission ? Number(e.avg_return).toFixed(3) : "no submission yet";
+    const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
+    const ts  = hasSubmission ? new Date(Number(e.timestamp) * 1000).toLocaleString()
+                              : "no submission yet";
     tr.innerHTML = `
       <td>${idx + 1}</td>
       <td>${e.student}</td>
-      <td>${Number(e.avg_return).toFixed(3)}</td>
-      <td>${Number(e.max_score).toFixed(3)}</td>
-      <td>${e.timestamp}</td>
+      <td>${avg}</td>
+      <td>${max}</td>
+      <td>${ts}</td>
     `;
 
     tbody.appendChild(tr);
