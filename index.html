@@ -82,11 +82,19 @@ function renderLeaderboard(data) {
   entries.forEach((e, idx) => {
     const tr = document.createElement("tr");
 
-    const hasSubmission = Number(e.timestamp) !== 0;
+    const isEpoch =
+      e.timestamp === 0 ||
+      e.timestamp === "0" ||
+      e.timestamp === "1970-01-01T00:00:00";
+
+    const hasSubmission = !isEpoch;
+
     const avg = hasSubmission ? Number(e.avg_return).toFixed(3) : "no submission yet";
     const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
-    const ts  = hasSubmission ? new Date(Number(e.timestamp) * 1000).toLocaleString()
-                              : "no submission yet";
+    const ts  = hasSubmission
+      ? new Date(e.timestamp).toLocaleString()
+      : "no submission yet";
+
     tr.innerHTML = `
       <td>${idx + 1}</td>
       <td>${e.student}</td>
