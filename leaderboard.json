@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-01-05T13:43:42.303622Z",
+  "generated_at": "2026-01-05T14:01:45.689258Z",
   "entries": [
+    {
+      "student": "LDarg",
+      "avg_return": 0.72,
+      "timestamp": "2026-01-05T14:01:45",
+      "max_score": 0.74
+    },
     {
       "student": "YaMusk",
       "avg_return": 0.706,
       "timestamp": "2026-01-05T12:31:02",
       "max_score": 0.706
-    },
-    {
-      "student": "LDarg",
-      "avg_return": 0.6565000000000001,
-      "timestamp": "2026-01-05T13:14:51",
-      "max_score": 0.74
     },
     {
       "student": "mzeimet",
