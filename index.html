@@ -89,7 +89,7 @@ function renderLeaderboard(data) {
 
     const hasSubmission = !isEpoch;
 
-    const avg = hasSubmission ? Number(e.avg_return).toFixed(3) : "no submission yet";
+    const avg = hasSubmission ? Number(e.score).toFixed(3) : "no submission yet";
     const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
     const ts  = hasSubmission
       ? new Date(e.timestamp).toLocaleString()
