@@ -33,13 +33,12 @@ def get_score_list():
     return [
         {
             "student": name,
-            "avg_return": score,
+            "score": score,
             "timestamp": datetime.fromtimestamp(ts).isoformat(),
             "max_score": max_score
         }
         for name, score, ts, max_score in rows
     ]
-
 
 if __name__ == "__main__":
     folder_path = Path(os.environ["GITHUB_WORKSPACE"]) / "out"
@@ -52,28 +51,35 @@ if __name__ == "__main__":
         with open(file, "r", encoding="utf-8") as f:
             result = json.load(f)
         print(result)
-        # Compute average over all average_return values
-        if result:
-            avg_return = sum(p["average_return"] for p in result) / len(result)
-        else:
-            avg_return = 0.0
+        if result: 
+            opp_1_beaten = result[0]["beaten"] 
+            opp_2_beaten = result[1]["beaten"] 
+            opp_3_beaten = result[2]["beaten"] 
+            opp_4_beaten = result[3]["beaten"] 
+            number_opp_beaten = opp_1_beaten + opp_2_beaten + opp_3_beaten+ opp_4_beaten
+        else: 
+            opp_1_beaten = False
+            opp_2_beaten = False
+            opp_3_beaten = False
+            opp_4_beaten = False
+            number_opp_beaten = 0
 
         student_name = repo_name.rsplit("-", 1)[-1]
 
         entries.append({
             "student_name": student_name,
-            "avg_return": avg_return,
+            "current_score": number_opp_beaten
         })
     
     for e in entries: 
         student_name = e["student_name"]
-        upsert_user_score(e["student_name"], e["avg_return"], int(datetime.now().timestamp()))
+        upsert_user_score(e["student_name"], e["current_score"], int(datetime.now().timestamp()))
         print(f"upserted student: {student_name}")
 
     entries = get_score_list()
 
     # sort by score descending
-    entries.sort(key=lambda e: (-e["avg_return"], e["student"]))
+    entries.sort(key=lambda e: (-e["max_score"], e["student"]))
 
     with open(OUTPUT_FILE, "w") as f:
         json.dump(
@@ -86,3 +92,5 @@ if __name__ == "__main__":
         )
 
     print(f"Wrote {OUTPUT_FILE}")
+
+
