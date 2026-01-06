@@ -20,12 +20,6 @@
     border-collapse: collapse;
     width: 100%;
   }
-  th {
-    background: #f0f0f0;
-    cursor: pointer;
-    padding: 8px;
-    border: 1px solid #a18d8d;
-  }
   td {
     padding: 6px 8px;
     border: 1px solid #ccc;
@@ -150,8 +144,6 @@ function renderLeaderboard(data) {
     div.innerHTML = `<td colspan="5"></td>`;
     tbody.appendChild(div);
   });
-
-  makeSortable();
 }
 
 // -------------------------------------------------------------
