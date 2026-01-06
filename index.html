@@ -62,8 +62,8 @@
     <tr>
       <th>Rank</th>
       <th>Student</th>
-      <th>Current Avg return</th>
-      <th>Max Avg return</th>
+      <th>Last Run</th>
+      <th>Best Result</th>
       <th>Last updated</th>
     </tr>
   </thead>
@@ -128,8 +128,8 @@ function renderLeaderboard(data) {
 
       const hasSubmission = !isEpoch;
 
-      const avg = hasSubmission ? Number(e.avg_return).toFixed(3) : "no submission yet";
-      const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
+      const score = hasSubmission ? Math.round(Number(e.score)) : "no submission yet";
+      const max   = hasSubmission ? Math.round(Number(e.max_score)) : "no submission yet";
       const ts  = hasSubmission
         ? new Date(e.timestamp).toLocaleString()
         : "no submission yet";
@@ -137,7 +137,7 @@ function renderLeaderboard(data) {
       tr.innerHTML = `
         <td>${rank++}</td>
         <td>${e.student}</td>
-        <td>${avg}</td>
+        <td>${score}</td>
         <td>${max}</td>
         <td>${ts}</td>
       `;
