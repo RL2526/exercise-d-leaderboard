@@ -51,13 +51,14 @@ if __name__ == "__main__":
         with open(file, "r", encoding="utf-8") as f:
             result = json.load(f)
         print(result)
-        if result: 
-            opp_1_beaten = result[0]["beaten"] 
-            opp_2_beaten = result[1]["beaten"] 
-            opp_3_beaten = result[2]["beaten"] 
-            opp_4_beaten = result[3]["beaten"] 
-            number_opp_beaten = opp_1_beaten + opp_2_beaten + opp_3_beaten+ opp_4_beaten
-        else: 
+        try:
+            opp_1_beaten = result[0]["beaten"]
+            opp_2_beaten = result[1]["beaten"]
+            opp_3_beaten = result[2]["beaten"]
+            opp_4_beaten = result[3]["beaten"]
+            number_opp_beaten = opp_1_beaten + opp_2_beaten + opp_3_beaten + opp_4_beaten
+                
+        except (KeyError, IndexError, TypeError):
             opp_1_beaten = False
             opp_2_beaten = False
             opp_3_beaten = False
