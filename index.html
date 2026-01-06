@@ -33,6 +33,22 @@
   tr:nth-child(even) {
     background: #fafafa;
   }
+
+  /* Tier visuals */
+  tr.tier-divider td {
+    padding: 0;
+    height: 10px;
+    background: #333;
+    border: none;
+  }
+  tr.tier-label td {
+    background: #222;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 6px;
+    border: none;
+  }
 </style>
 </head>
 
@@ -68,7 +84,7 @@ fetch('leaderboard.json?v=20260105')
   });
 
 // -------------------------------------------------------------
-// RENDER LEADERBOARD
+// RENDER LEADERBOARD WITH TIERS
 // -------------------------------------------------------------
 function renderLeaderboard(data) {
   const entries = data.entries || [];
@@ -79,31 +95,60 @@ function renderLeaderboard(data) {
   const tbody = document.querySelector("#leaderboard tbody");
   tbody.innerHTML = "";
 
-  entries.forEach((e, idx) => {
-    const tr = document.createElement("tr");
+  const tiers = [
+    { name: "💪 All 4 opponents beaten!", min: 4.0 },
+    { name: "👏 3 opponents beaten",      min: 3.0 },
+    { name: "👍 2 opponents beaten",      min: 2.0 },
+    { name: "🤔 1 opponent beaten",       min: 1.0 },
+    { name: "No opponents beaten yet",    min: 0.0 }
+  ];
 
-    const isEpoch =
-      e.timestamp === 0 ||
-      e.timestamp === "0" ||
-      e.timestamp === "1970-01-01T00:00:00";
+  let rank = 1;
 
-    const hasSubmission = !isEpoch;
+  tiers.forEach(tier => {
+    const group = entries.filter(e =>
+      Number(e.max_score) >= tier.min &&
+      (tier.min === 4 || Number(e.max_score) < tier.min + 1)
+    );
 
-    const avg = hasSubmission ? Number(e.score).toFixed(3) : "no submission yet";
-    const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
-    const ts  = hasSubmission
-      ? new Date(e.timestamp).toLocaleString()
-      : "no submission yet";
+    if (group.length === 0) return;
 
-    tr.innerHTML = `
-      <td>${idx + 1}</td>
-      <td>${e.student}</td>
-      <td>${avg}</td>
-      <td>${max}</td>
-      <td>${ts}</td>
-    `;
+    const label = document.createElement("tr");
+    label.className = "tier-label";
+    label.innerHTML = `<td colspan="5">${tier.name}</td>`;
+    tbody.appendChild(label);
 
-    tbody.appendChild(tr);
+    group.forEach(e => {
+      const tr = document.createElement("tr");
+
+      const isEpoch =
+        e.timestamp === 0 ||
+        e.timestamp === "0" ||
+        e.timestamp === "1970-01-01T00:00:00";
+
+      const hasSubmission = !isEpoch;
+
+      const avg = hasSubmission ? Number(e.avg_return).toFixed(3) : "no submission yet";
+      const max = hasSubmission ? Number(e.max_score).toFixed(3) : "no submission yet";
+      const ts  = hasSubmission
+        ? new Date(e.timestamp).toLocaleString()
+        : "no submission yet";
+
+      tr.innerHTML = `
+        <td>${rank++}</td>
+        <td>${e.student}</td>
+        <td>${avg}</td>
+        <td>${max}</td>
+        <td>${ts}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    const div = document.createElement("tr");
+    div.className = "tier-divider";
+    div.innerHTML = `<td colspan="5"></td>`;
+    tbody.appendChild(div);
   });
 
   makeSortable();
@@ -118,7 +163,10 @@ function makeSortable() {
 
   headers.forEach((th, index) => {
     th.addEventListener("click", () => {
-      const rows = Array.from(table.querySelectorAll("tbody tr"));
+      const rows = Array.from(table.querySelectorAll("tbody tr"))
+        .filter(r => !r.classList.contains("tier-label") &&
+                     !r.classList.contains("tier-divider"));
+
       const asc = th.dataset.asc === "true";
 
       rows.sort((a, b) => {
@@ -134,8 +182,9 @@ function makeSortable() {
         return asc ? x.localeCompare(y) : y.localeCompare(x);
       });
 
-      rows.forEach(r => table.querySelector("tbody").appendChild(r));
-      th.dataset.asc = (!asc).toString();
+      const tbody = table.querySelector("tbody");
+      tbody.querySelectorAll("tr").forEach(r => r.remove());
+      rows.forEach(r => tbody.appendChild(r));
     });
   });
 }
