@@ -13,6 +13,6 @@ def delete_user(name):
     
 
 if __name__ == "__main__":
-    student_name = "mzeimet"
+    student_name = "YaMusk"
     delete_user(student_name,)
     print(f"Deleted {student_name}")
