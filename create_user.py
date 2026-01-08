@@ -13,6 +13,6 @@ def create_user(name):
         conn.commit()
 
 if __name__ == "__main__":
-    student_name = "YaMusk"
+    student_name = "Kaushik-93"
     create_user(student_name,)
     print(f"Created {student_name}")
