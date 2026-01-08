@@ -6,6 +6,7 @@ import sqlite3
 
 DB_PATH = "data.db"
 OUTPUT_FILE = "leaderboard.json"
+ASSIGNMENT_PREFIX = "rl-exercise-d-"
 
 def upsert_user_score(name, score, ts):
     with sqlite3.connect(DB_PATH) as conn:
@@ -65,7 +66,7 @@ if __name__ == "__main__":
             opp_4_beaten = False
             number_opp_beaten = 0
 
-        student_name = repo_name.rsplit("-", 1)[-1]
+        student_name = repo_name[len(ASSIGNMENT_PREFIX):]
 
         entries.append({
             "student_name": student_name,
