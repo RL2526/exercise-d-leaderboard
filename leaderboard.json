@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-08T16:19:21.213339Z",
+  "generated_at": "2026-01-08T17:20:55.667906Z",
   "entries": [
     {
       "student": "umutkavakli",
@@ -12,6 +12,12 @@
       "score": 3.0,
       "timestamp": "2026-01-07T10:40:40",
       "max_score": 3.0
+    },
+    {
+      "student": "93",
+      "score": 0.0,
+      "timestamp": "2026-01-08T17:20:55",
+      "max_score": 0.0
     },
     {
       "student": "Kaushik-93",
