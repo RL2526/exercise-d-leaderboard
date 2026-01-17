@@ -1,6 +1,12 @@
 {
-  "generated_at": "2026-01-17T14:12:34.700751Z",
+  "generated_at": "2026-01-17T15:12:56.297193Z",
   "entries": [
+    {
+      "student": "Mavlyudabegim",
+      "score": 4.0,
+      "timestamp": "2026-01-17T15:12:56",
+      "max_score": 4.0
+    },
     {
       "student": "Shahriyor22",
       "score": 4.0,
@@ -29,12 +35,6 @@
       "student": "Kaushik-93",
       "score": 0.0,
       "timestamp": "2026-01-08T20:26:03",
-      "max_score": 0.0
-    },
-    {
-      "student": "Mavlyudabegim",
-      "score": 0.0,
-      "timestamp": "2026-01-17T14:12:34",
       "max_score": 0.0
     },
     {
